@@ -11,6 +11,7 @@
 ## ✨ Funcionalidades
 
 - **Dashboard** com acesso rápido às ferramentas do dia a dia.
+- **Kanban e Team** (Novas funcionalidades)...
 - **Tarefas/Notas**: criação, listagem e exclusão de notas (persistidas em `data/notes.json`).
 - **Chat em tempo real** via Socket.IO.
 - **Central de Links**: atalhos para redes sociais, e-mail e ferramentas de produtividade.
