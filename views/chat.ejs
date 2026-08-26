@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
+    <title>Chat | infoDevBrasil CRM</title>
+    <style>
+        body {
+            margin: 0;
+            padding-bottom: 3rem;
+            font-family: Arial, sans-serif;
+            background: #0a0a0a;
+            color: #eaeaea;
+            display: flex;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-bottom: 1px solid #1f2323;
+        }
+        .chat-header img { width: 36px; }
+        #user-bar {
+            display: flex;
+            gap: 8px;
+            padding: 10px 16px;
+        }
+        #username {
+            flex-grow: 0 1;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #333;
+            background: #141414;
+            color: #eaeaea;
+        }
+        #register {
+            background: #1bf668;
+            border: none;
+            color: #06210f;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        #form {
+            background: #101314;
+            padding: 0.25rem;
+            position: sticky;
+            bottom: 0;
+            display: flex;
+            height: 3rem;
+            box-sizing: border-box;
+            border-top: 1px solid #1f2323;
+        }
+        #input {
+            border: none;
+            padding: 1rem;
+            flex-grow: 1;
+            border-radius: 2rem;
+            margin: 0.15rem;
+        }
+        #input:focus { outline: none; }
+        #form > button {
+            background: #1bf668;
+            border: none;
+            padding: 0 1rem;
+            margin: 0.25rem;
+            border-radius: 3px;
+            outline: none;
+            color: #06210f;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            flex: 1;
+            overflow-y: auto;
+        }
+        #messages > li {
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #1a1a1a;
+        }
+        #messages > li:nth-child(odd) {
+            background: #121212;
+        }
+        #messages .msg-user {
+            color: #1bf668;
+            font-weight: 700;
+            margin-right: 6px;
+        }
+        #messages .msg-time {
+            color: #6f6f6f;
+            font-size: 0.75rem;
+            margin-left: 8px;
+        }
+        #typing-indicator {
+            min-height: 1.2rem;
+            padding: 0 16px;
+            font-size: 0.8rem;
+            color: #9a9a9a;
+            font-style: italic;
+        }
+        .online-panel {
+            width: 200px;
+            border-left: 1px solid #1f2323;
+            padding: 16px 12px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .online-panel h4 {
+            margin: 0 0 10px;
+            color: #9a9a9a;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .online-panel ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .online-panel li {
+            padding: 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .online-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #1bf668;
+            display: inline-block;
+        }
+        @media (max-width: 700px) {
+            .online-panel { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-main">
+        <div class="chat-header">
+            <img src="/assets/logo.png" alt="infoDevBrasil">
+            <span>Chat infoDevBrasil CRM</span>
+        </div>
+
+        <div id="user-bar">
+            <input id="username" placeholder="Digite seu nome" required />
+            <button id="register">Registrar</button>
+        </div>
+
+        <ul id="messages">
+            <% mensagens.forEach(function(m) { %>
+                <li>
+                    <span class="msg-user"><%= m.username %>:</span><span class="msg-text"><%= m.msg %></span><span class="msg-time"><%= new Date(m.timestamp).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) %></span>
+                </li>
+            <% }); %>
+        </ul>
+
+        <div id="typing-indicator"></div>
+
+        <form id="form" action="">
+            <input id="input" autocomplete="off" placeholder="Digite sua mensagem" required />
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+
+    <div class="online-panel">
+        <h4>Online</h4>
+        <ul id="online-list"></ul>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script nonce="<%= nonce %>">
+        const socket = io();
+        const form = document.getElementById('form');
+        const input = document.getElementById('input');
+        const messages = document.getElementById('messages');
+        const registerBtn = document.getElementById('register');
+        const usernameInput = document.getElementById('username');
+        const onlineList = document.getElementById('online-list');
+        const typingIndicator = document.getElementById('typing-indicator');
+
+        let isRegistered = false;
+        let typingTimeout = null;
+
+        function registrar(username) {
+            socket.emit('register', username);
+            isRegistered = true;
+            usernameInput.style.display = 'none';
+            registerBtn.style.display = 'none';
+            localStorage.setItem('crm-chat-username', username);
+        }
+
+        // Lembra o nome do usuário entre visitas (armazenamento local do navegador)
+        const nomeSalvo = localStorage.getItem('crm-chat-username');
+        if (nomeSalvo) {
+            usernameInput.value = nomeSalvo;
+            registrar(nomeSalvo);
+        }
+
+        registerBtn.addEventListener('click', () => {
+            const username = usernameInput.value.trim();
+            if (username) {
+                registrar(username);
+            } else {
+                alert('Por favor, insira um nome válido.');
+            }
+        });
+
+        messages.scrollTop = messages.scrollHeight;
+
+        socket.on('chat message', ({ username, msg, timestamp }) => {
+            const item = document.createElement('li');
+            const hora = new Date(timestamp).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+            const userSpan = document.createElement('span');
+            userSpan.className = 'msg-user';
+            userSpan.textContent = username + ':';
+
+            const textSpan = document.createElement('span');
+            textSpan.className = 'msg-text';
+            textSpan.textContent = msg;
+
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'msg-time';
+            timeSpan.textContent = hora;
+
+            item.appendChild(userSpan);
+            item.appendChild(textSpan);
+            item.appendChild(timeSpan);
+            messages.appendChild(item);
+            messages.scrollTop = messages.scrollHeight;
+        });
+
+        socket.on('users online', (usuarios) => {
+            onlineList.innerHTML = '';
+            usuarios.forEach((nome) => {
+                const li = document.createElement('li');
+                li.innerHTML = '<span class="online-dot"></span>';
+                li.append(nome);
+                onlineList.appendChild(li);
+            });
+        });
+
+        socket.on('typing', ({ username }) => {
+            typingIndicator.textContent = `${username} está digitando...`;
+        });
+        socket.on('stop typing', () => {
+            typingIndicator.textContent = '';
+        });
+
+        input.addEventListener('input', () => {
+            if (!isRegistered) return;
+            socket.emit('typing');
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => socket.emit('stop typing'), 1000);
+        });
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!isRegistered) {
+                alert('Você precisa se registrar antes de enviar mensagens.');
+                return;
+            }
+            if (input.value) {
+                socket.emit('chat message', input.value);
+                socket.emit('stop typing');
+                clearTimeout(typingTimeout);
+                input.value = '';
+            }
+        });
+    </script>
+</body>
+</html>

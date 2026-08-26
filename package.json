@@ -1,0 +1,38 @@
+{
+  "name": "crm_new",
+  "version": "1.1.0",
+  "description": "CRM minimalista da infoDevBrasil — dashboard, notas, chat em tempo real e central de links",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [],
+  "author": "izaias de oliveira elias",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.4.1",
+    "helmet": "^8.0.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "socket.io": "^4.8.1",
+    "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/izaias-nerd/crm_new.git"
+  },
+  "bugs": {
+    "url": "https://github.com/izaias-nerd/crm_new/issues"
+  },
+  "homepage": "https://github.com/izaias-nerd/crm_new#readme"
+}

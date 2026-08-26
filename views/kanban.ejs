@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Kanban | infoDevBrasil CRM</title>
+</head>
+<body>
+    <%- include('partials/sidebar') %>
+
+    <div class="content">
+        <div class="kanban-header">
+            <h2 class="page-title" style="margin-bottom:0;">Kanban</h2>
+            <button class="btn" id="btn-nova-tarefa">+ Nova tarefa</button>
+        </div>
+
+        <div class="kanban-board">
+            <div class="kanban-column" data-status="todo">
+                <h3>A Fazer <span class="count" id="count-todo"></span></h3>
+                <div class="kanban-cards" id="col-todo"></div>
+            </div>
+            <div class="kanban-column" data-status="doing">
+                <h3>Em Andamento <span class="count" id="count-doing"></span></h3>
+                <div class="kanban-cards" id="col-doing"></div>
+            </div>
+            <div class="kanban-column" data-status="done">
+                <h3>Concluído <span class="count" id="count-done"></span></h3>
+                <div class="kanban-cards" id="col-done"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de nova tarefa -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal card">
+            <h3 style="color:#222; margin-bottom:16px;">Nova tarefa</h3>
+            <form id="form-nova-tarefa">
+                <input type="text" id="titulo" placeholder="Título" required maxlength="120">
+                <textarea id="descricao" placeholder="Descrição (opcional)" maxlength="1000" rows="3"></textarea>
+                <select id="prioridade">
+                    <option value="baixa">Prioridade baixa</option>
+                    <option value="media" selected>Prioridade média</option>
+                    <option value="alta">Prioridade alta</option>
+                </select>
+                <select id="assigneeId">
+                    <option value="">Sem responsável</option>
+                    <% membros.forEach(function(m) { %>
+                        <option value="<%= m.id %>"><%= m.nome %></option>
+                    <% }); %>
+                </select>
+                <div class="modal-actions">
+                    <button type="button" class="btn-danger" id="btn-cancelar">Cancelar</button>
+                    <button type="submit" class="btn">Criar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Dados iniciais renderizados pelo servidor
+        window.__TAREFAS_INICIAIS__ = <%- JSON.stringify(tarefas) %>;
+        window.__MEMBROS__ = <%- JSON.stringify(membros) %>;
+    </script>
+    <script src="/js/sidebar.js"></script>
+    <script src="/js/kanban.js"></script>
+</body>
+</html>

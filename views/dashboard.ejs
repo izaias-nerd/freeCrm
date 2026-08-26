@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Dashboard | infoDevBrasil CRM</title>
+</head>
+<body>
+    <%- include('partials/sidebar') %>
+
+    <div class="content center-wrap">
+        <div class="card">
+            <img src="/assets/logo.png" alt="infoDevBrasil">
+            <h2 class="page-title" style="color:#222;">Bem-vindo ao CRM</h2>
+            <div class="text">
+                <p>Repositório do projeto no GitHub</p>
+                <a href="https://github.com/izaias-nerd/crm_new" target="_blank" style="color:#222;" rel="noopener noreferrer">Ver repositório</a>
+                <p style="margin-top:14px;">Contribua para melhorar o projeto.</p>
+                <a href="javascript:void(0)" id="whatsapp-link" style="color:#222;" class="btn" style="display:inline-block;margin-top:14px;">Falar no WhatsApp</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/sidebar.js"></script>
+    <script>
+        // Abre o WhatsApp Business dependendo do dispositivo
+        document.getElementById('whatsapp-link').addEventListener('click', () => {
+            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            if (/android/i.test(userAgent) || /iPhone|iPad|iPod/i.test(userAgent)) {
+                window.location.href = "https://wa.me/c/5521966562979";
+            } else {
+                window.open("https://web.whatsapp.com/send?phone=5521966562979", "_blank");
+            }
+        });
+    </script>
+</body>
+</html>

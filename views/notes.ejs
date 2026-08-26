@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Adicionar Nota | infoDevBrasil CRM</title>
+    <style>
+        .form-card {
+            background-color: var(--card-bg);
+            color: #222;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            max-width: 460px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .form-card h1 { font-size: 1.4rem; margin-bottom: 20px; color: #222; }
+        .form-card input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-bottom: 14px;
+            font-size: 1rem;
+        }
+        .form-card .links { margin-top: 16px; }
+        .form-card .links a { color: var(--green-strong); font-weight: 600; }
+    </style>
+</head>
+<body>
+    <%- include('partials/sidebar') %>
+
+    <div class="content center-wrap">
+        <div class="form-card">
+            <h1>Adicionar Nota</h1>
+            <form action="/add-note" method="POST">
+                <input type="text" name="nota" placeholder="Digite sua nota" required>
+                <button type="submit" class="btn">Adicionar Nota</button>
+            </form>
+            <div class="links">
+                <a href="/list_notes">Ver Notas</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/sidebar.js"></script>
+</body>
+</html>

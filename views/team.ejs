@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Equipe | infoDevBrasil CRM</title>
+</head>
+<body>
+    <%- include('partials/sidebar') %>
+
+    <div class="content">
+        <h2 class="page-title">Equipe</h2>
+
+        <div class="team-layout">
+            <div class="card team-form-card">
+                <h3 style="color:#222; margin-bottom:16px;">Adicionar membro</h3>
+                <form action="/team/add" method="POST">
+                    <input type="text" name="nome" placeholder="Nome" required maxlength="80">
+                    <input type="email" name="email" placeholder="E-mail (opcional)" maxlength="120">
+                    <input type="text" name="papel" placeholder="Papel (ex: Dev, Vendas)" maxlength="60">
+                    <button type="submit" class="btn">Adicionar</button>
+                </form>
+            </div>
+
+            <div class="team-list">
+                <% if (membros.length === 0) { %>
+                    <p class="empty-state">Nenhum membro cadastrado ainda.</p>
+                <% } else { %>
+                    <% membros.forEach(function(m) { %>
+                        <div class="team-member-card">
+                            <div class="avatar" style="background: <%= m.cor %>;"><%= m.nome.charAt(0).toUpperCase() %></div>
+                            <div class="team-member-info">
+                                <strong><%= m.nome %></strong>
+                                <span class="muted"><%= m.papel %></span>
+                                <% if (m.email) { %><span class="muted"><%= m.email %></span><% } %>
+                                <span class="muted"><%= m.totalTarefas %> tarefa(s) atribuída(s)</span>
+                            </div>
+                            <form action="/team/delete/<%= m.id %>" method="POST" onsubmit="return confirm('Remover este membro?');">
+                                <button type="submit" class="btn-danger">Remover</button>
+                            </form>
+                        </div>
+                    <% }); %>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/sidebar.js"></script>
+</body>
+</html>

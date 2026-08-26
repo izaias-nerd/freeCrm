@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Links Web3 | infoDevBrasil CRM</title>
+    <style>
+        .content { display: block; }
+        .links-card {
+            background-color: var(--card-bg);
+            color: #222;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .links-card h2 { margin-bottom: 14px; color: #222; }
+        .links-card ul { list-style: none; }
+        .links-card li { margin: 10px 0; }
+        .links-card a { color: var(--green-strong); font-weight: 600; }
+        .links-card a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <%- include('partials/sidebar') %>
+
+    <div class="content">
+        <div class="links-card">
+            <h2>Redes Sociais Populares Web3</h2>
+            <h2>Nostr</h2>
+            <ul>
+                <li><a href="https://nostr.com" target="_blank" rel="noopener noreferrer">Nostr - Site Oficial</a></li>
+                <li><a href="https://github.com/fiatjaf/nostr" target="_blank" rel="noopener noreferrer">Repositório Nostr no GitHub</a></li>
+                <li><a href="https://nostr.build" target="_blank" rel="noopener noreferrer">Nostr Build</a></li>
+                <li><a href="https://nostr.watch" target="_blank" rel="noopener noreferrer">Nostr Watch</a></li>
+                <li><a href="https://nostr.rocks" target="_blank" rel="noopener noreferrer">Nostr Rocks</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="/js/sidebar.js"></script>
+</body>
+</html>
